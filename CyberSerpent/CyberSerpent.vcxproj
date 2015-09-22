@@ -79,12 +79,14 @@
     <ClInclude Include="CyberSerpent.h" />
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="Incopiable.h" />
+    <ClInclude Include="IRobotDriver.h" />
     <ClInclude Include="KeyboardReader.h" />
     <ClInclude Include="Point2D.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Gameplay.cpp" />
+    <ClCompile Include="IRobotDriver.cpp" />
     <ClCompile Include="KeyboardReader.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
