@@ -1,0 +1,10 @@
+Debug/CyberSerpent.pdb
+*.ilk
+CyberSerpent/Debug/vc120.pdb
+*.idb
+*.obj
+*.tlog
+*.suo
+CyberSerpent.sdf
+*.opensdf
+*.log
