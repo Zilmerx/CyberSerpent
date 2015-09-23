@@ -55,4 +55,6 @@ int MainTestKeyBoard()
 	std::cout << "FIN" << std::endl;
 
 	reader.stop();
+
+	return 0;
 }

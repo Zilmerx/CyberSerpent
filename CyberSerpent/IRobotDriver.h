@@ -7,10 +7,6 @@
 
 #include <iostream>
 #include <windows.h>
-#include <mutex>
-#include <condition_variable>
-#include <thread>
-#include <math.h>
 
 using namespace std;
 
@@ -19,39 +15,39 @@ namespace IRobot
 
 	enum DirectionY
 	{
-		HAUT = 11,
-		BAS  = 12,
+		HAUT,
+		BAS,
 	};
 
 	enum DirectionX
 	{
-		GAUCHE = 13,
-		AVANT_GAUCHE = 14,
-		AVANT_DROITE = 15,
-		DROITE = 16
+		GAUCHE,
+		AVANT_GAUCHE,
+		AVANT_DROITE,
+		DROITE
 	};
 
 	enum CodeSensor
 	{
-		BUMPER = 20,
-		WHEEL = 21,
-		CLIFF = 22,
-		CLIFF_SIGNAL = 23,
-		WALL = 24,
-		WALL_SIGNAL = 25,
-		VIRTUAL_WALL = 26,
-		BATTERY_CHARGE = 27,
-		BATTERY_CAPACITY = 28,
-		DISTANCE = 29,
-		ANGLE = 30
+		BUMPER,
+		WHEEL,
+		CLIFF,
+		CLIFF_SIGNAL,
+		WALL,
+		WALL_SIGNAL,
+		VIRTUAL_WALL,
+		BATTERY_CHARGE,
+		BATTERY_CAPACITY,
+		DISTANCE,
+		ANGLE
 	};
 
 	enum SuivreLigneState
 	{
-		TROP_A_DROITE = 41,
-		TROP_A_GAUCHE = 42,
-		INTERSECTION = 43,
-		CENTRE = 44
+		TROP_A_DROITE,
+		TROP_A_GAUCHE,
+		INTERSECTION,
+		CENTRE
 	};
 
 
@@ -106,8 +102,8 @@ namespace IRobot
 
 	   // Membres.
 	   HANDLE PortSerie;
-	   int m_Temps_Ecriture;
-	   int m_Temps_Lecture;
+	   const int m_Temps_Ecriture;
+	   const int m_Temps_Lecture;
 
 
 	   // Fonction de démarrage.
@@ -132,13 +128,7 @@ namespace IRobot
 	   void Send(char arg1, ...);
 
 	   // Fonction de lecture, permet d'envoyer des valeurs au robot et de lire le message de retour.
-	   int Read(unsigned char Param1,bool HighByte);
-	   int Read(unsigned char Param1, unsigned char Param2,bool HighByte);
-	   int Read(unsigned char Param1, unsigned char Param2, unsigned char Param3,bool HighByte);
-	   int Read(unsigned char Param1, unsigned char Param2, unsigned char Param3, unsigned char Param4,bool HighByte);
-	   int Read(unsigned char Param1, unsigned char Param2, unsigned char Param3, unsigned char Param4, unsigned char Param5,bool HighByte);
-	   int Read(unsigned char Param1, unsigned char Param2, unsigned char Param3, unsigned char Param4, unsigned char Param5, unsigned char Param6,bool HighByte);
-	   int Read(unsigned char Param1, unsigned char Param2, unsigned char Param3, unsigned char Param4, unsigned char Param5, unsigned char Param6, unsigned char Param7,bool HighByte);
+	   int IRobot::Read(bool HighByte, char arg1, ...);
 
 	   // Envoi de message d'erreur à l'utilisateur.
 	   int Erreur( char* message, DWORD erreur, bool Shutdown );

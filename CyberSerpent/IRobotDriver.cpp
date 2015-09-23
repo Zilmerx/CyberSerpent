@@ -1,5 +1,6 @@
 #include "IRobotDriver.h"
 #include <stdarg.h>
+#include <exception>
 
 namespace IRobot
 {
@@ -148,7 +149,7 @@ void IRobot::Drive( short VitesseGauche, short VitesseDroite)
       char VitesseDroiteHaut = ShortToChar(VitesseDroite, HAUT);
 
       // Envoi de la commande.
-      Send(128, 132, (char)145, VitesseDroiteHaut, VitesseDroiteBas, VitesseGaucheHaut, VitesseGaucheBas);
+      Send(128, 132, 145, VitesseDroiteHaut, VitesseDroiteBas, VitesseGaucheHaut, VitesseGaucheBas);
 
    }
 }
@@ -163,7 +164,7 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
 
    if (Vitesse <= 500 || Vitesse >= 20)
    {
-	  SuivreLigneState EtatCourant;
+	  SuivreLigneState EtatCourant = SuivreLigneState::CENTRE;
       int Cliff_Signal_Droit = 0;
       int Cliff_Signal_Gauche = 0;
 
@@ -210,7 +211,7 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
             EtatCourant = INTERSECTION;
          }
          else
-         {if ( S_Sensor(BUMPER,GAUCHE) == true || S_Sensor(BUMPER,DROITE) == true )  // Si il y a une collision sur les bumpers.
+         {if ( S_Sensor(BUMPER,GAUCHE) != 0 || S_Sensor(BUMPER,DROITE) != 0)  // Si il y a une collision sur les bumpers.
          {
             Stop();
 			return 2;
@@ -252,32 +253,31 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
 
 int IRobot::Sensor(CodeSensor sensor)
 {
-   long Retour = 0;
-
    switch (sensor){
    case CodeSensor::WALL :
-      Retour = (bool)Read(128,132,142,8,false);
+	  return Read(false, 128,132,142,8);
       break;
    case CodeSensor::WALL_SIGNAL :
-      Retour = Read(128,132,142,27,false);
+	  return Read(false, 128,132,142,27);
       break;
    case CodeSensor::VIRTUAL_WALL :
-      Retour = Read(128,132,142,13,false);
+	  return Read(false, 128,132,142,13);
       break;
    case CodeSensor::BATTERY_CHARGE :
-      Retour = (unsigned int)Read(128,132,142,25,false);
+	  return Read(false, 128,132,142,25);
       break;
    case CodeSensor::BATTERY_CAPACITY :
-      Retour = (unsigned int)Read(128,132,142,26,false);
+	  return Read(false, 128,132,142,26);
       break;
    case CodeSensor::DISTANCE :
-      Retour = Read(128,132,142,19,false);
+	  return Read(false, 128,132,142,19);
       break;
    case CodeSensor::ANGLE :
-      Retour = Read(128,132,142,20,false);
+      return Read(false, 128,132,142,20);
       break;
    }
-   return Retour;
+
+   throw invalid_argument("Numero de sensor non-reconnu");
 }
 int IRobot::S_Sensor(CodeSensor sensor)
 {
@@ -320,16 +320,16 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
 
    switch (sensor){
    case CodeSensor::BUMPER:    // BUMPER
-      Retour = Read(128,132,142,7,false);
+      Retour = Read(false, 128,132,142,7);
 	  if (precision == GAUCHE)
       {
-         Retour = (bool)(Retour & 2);
+         Retour = (Retour & 2);
       }
       else
 	  {
 		  if (precision == DirectionX::DROITE)
       {
-         Retour = (bool)(Retour & 1);
+         Retour = (Retour & 1);
       }
       else
       {
@@ -338,16 +338,16 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
       break;
 
    case CodeSensor::WHEEL:    // WHEEL
-      Retour = Read(128,132,142,7,false);
+      Retour = Read(false, 128,132,142,7);
 	  if (precision == DirectionX::GAUCHE)
       {
-         Retour = (bool)(Retour & 8);
+         Retour = (Retour & 8);
       }
       else
 	  {
 		  if (precision == DirectionX::DROITE)
       {
-         Retour = (bool)(Retour & 4);
+         Retour = (Retour & 4);
       }
       else
       {
@@ -358,25 +358,25 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
    case CodeSensor::CLIFF:    // CLIFF
 	   if (precision == DirectionX::GAUCHE)
       {
-         Retour = (bool)Read(128,132,142,9,false);
+         Retour = Read(false, 128,132,142,9);
       }
       else
 	  {
 		  if (precision == DirectionX::AVANT_GAUCHE)
       {
-         Retour = (bool)Read(128,132,142,10,false);
+         Retour = Read(false, 128,132,142,10);
       }
       else
 	  {
 		  if (precision == DirectionX::AVANT_DROITE)
       {
-         Retour = (bool)Read(128,132,142,11,false);
+         Retour = Read(false, 128,132,142,11);
       }
       else
 	  {
 		  if (precision == DirectionX::DROITE)
       {
-         Retour = (bool)Read(128,132,142,12,false);
+         Retour = Read(false, 128,132,142,12);
       }
       else
       {
@@ -388,7 +388,7 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
 		if (precision == DirectionX::GAUCHE)
       {
 		 do{
-         Retour = Read(128,132,142,28,true);
+         Retour = Read(true,128,132,142,28);
 	     }while(Retour < 0 || Retour > 4098);
       }
       else
@@ -396,7 +396,7 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
 		  if (precision == DirectionX::AVANT_GAUCHE)
       {
          do{
-         Retour = Read(128,132,142,29,true);
+         Retour = Read(true, 128,132,142,29);
 	     }while(Retour < 0 || Retour > 4098);
       }
       else
@@ -404,7 +404,7 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
 		  if (precision == DirectionX::AVANT_DROITE)
       {
          do{
-         Retour = Read(128,132,142,30,true);
+         Retour = Read(true, 128,132,142,30);
 	     }while(Retour < 0 || Retour > 4098);
       }
       else
@@ -412,7 +412,7 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
 		  if (precision == DirectionX::DROITE)
       {
          do{
-         Retour = Read(128,132,142,31,true);
+         Retour = Read(true, 128,132,142,31);
 	     }while(Retour < 0 || Retour > 4098);
       }
       else
@@ -422,31 +422,31 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
       break;
 
 	case CodeSensor::WALL:    // WALL
-      Retour = Read(128,132,142,8,false);
+      Retour = Read(false, 128,132,142,8);
       break;
 
 	case CodeSensor::WALL_SIGNAL:    // WALL_SIGNAL
-      Retour = Read(128,132,142,27,false);
+      Retour = Read(false, 128,132,142,27);
       break;
 
 	case CodeSensor::VIRTUAL_WALL:    // VIRTUAL_WALL
-      Retour = Read(128,132,142,13,false);
+      Retour = Read(false, 128,132,142,13);
       break;
 
 	case CodeSensor::BATTERY_CHARGE:    // BATTERY_CHARGE
-      Retour = Read(128,132,142,25,false);
+      Retour = Read(false, 128,132,142,25);
       break;
 
 	case CodeSensor::BATTERY_CAPACITY:    // BATTERY_CAPACITY
-      Retour = Read(128,132,142,26,false);
+      Retour = Read(false, 128,132,142,26);
       break;
 
 	case CodeSensor::DISTANCE:    // DISTANCE
-      Retour = Read(128,132,142,19,false);
+      Retour = Read(false, 128,132,142,19);
       break;
 
 	case CodeSensor::ANGLE:    // ANGLE
-      Retour = Read(128,132,142,20,false);
+      Retour = Read(false, 128,132,142,20);
       break;
    }
    return Retour;
@@ -595,8 +595,7 @@ void IRobot::Flush(int Quantité)
    system("cls");
    cout << "IRobot Boot - Nettoyage du port.." << endl;
 
-   Succes = ReadFile( PortSerie, Tampon, strlen(Tampon), &NbEcrits, 0 );
-   if( ! Succes )
+   if( !ReadFile(PortSerie, Tampon, strlen(Tampon), &NbEcrits, 0) )
    { Erreur(" Erreur dans la reception d'un parametre (Flush).", 1,0);}
 
    ComTimeoutSetup(0,0,m_Temps_Lecture, 0,m_Temps_Ecriture);
@@ -631,255 +630,38 @@ void IRobot::Send(char arg1, ...)
 ///////////////////////////////////////           READ            /////////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 // Permet d'envoyer une ou plusieurs valeurs au robot et de recevoir le message de retour.
-int IRobot::Read(unsigned char Param1,bool HighByte)
+int IRobot::Read(bool HighByte, char arg1, ...)
 {
-   DWORD NbEcrits = 0;
-   bool Succes = 0;
    int Retour = 0;
+   DWORD NbEcrits = 0;
 
+   va_list ap;
 
-   Succes = WriteFile(PortSerie, &Param1, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-1).", 1,0);}
+   va_start(ap, arg1);
 
-   Succes = ReadFile( PortSerie, &Retour, 1, &NbEcrits, 0 );
-   if( ! Succes )
-   { Erreur(" Erreur dans la reception d'un parametre (Read-1).", 1,0);}
-
-   if ( HighByte == 1)
+   for (char i = arg1; ; i = va_arg(ap, char))
    {
-      Retour = Retour >> 4;
+	   if (!WriteFile(PortSerie, &i, 1, &NbEcrits, 0))
+	   {
+		   Erreur(" Erreur dans l'envoi d'un parametre.", 1, 0);
+	   }
+   }
+
+   va_end(ap);
+
+   if (!ReadFile(PortSerie, &Retour, 1, &NbEcrits, 0))
+   {
+	   Erreur(" Erreur dans la reception d'un parametre (Read-1).", 1, 0);
+   }
+
+   if (HighByte)
+   {
+	   Retour = Retour >> 4;
    }
 
    return Retour;
+
 }
-int IRobot::Read(unsigned char Param1, unsigned char Param2,bool HighByte)
-{
-   DWORD NbEcrits = 0;
-   bool Succes = 0;
-   int Retour = 0;
-
-
-   Succes = WriteFile(PortSerie, &Param1, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-2).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param2, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-2).", 1,0);}
-
-   Succes = ReadFile( PortSerie,&Retour, 2, &NbEcrits, 0 );
-   if( ! Succes )
-   { Erreur(" Erreur dans la reception d'un parametre (Read-1).", 1,0);}
-
-
-   if ( HighByte == 1)
-   {
-      Retour = Retour >> 4;
-   }
-
-   return Retour;
-}
-int IRobot::Read(unsigned char Param1, unsigned char Param2, unsigned char Param3,bool HighByte)
-{
-   DWORD NbEcrits = 0;
-   bool Succes = 0;
-   int Retour = 0;
-
-   Succes = WriteFile(PortSerie, &Param1, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-3).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param2, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-3).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param3, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-3).", 1,0);}
-
-   Succes = ReadFile( PortSerie, &Retour, 2, &NbEcrits, 0 );
-   if( ! Succes )
-   { Erreur(" Erreur dans la reception d'un parametre (Read-1).", 1,0);}
-
-
-   //if ( HighByte == 1)
-   //{
-   //   Retour = Retour >> 4;
-   //}
-
-   return Retour;
-}
-int IRobot::Read(unsigned char Param1, unsigned char Param2, unsigned char Param3, unsigned char Param4,bool HighByte)
-{
-   DWORD NbEcrits = 0;
-   bool Succes = 0;
-   int Retour = 0;
-
-   
-   Succes = WriteFile(PortSerie, &Param1, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-4).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param2, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-4).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param3, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-4).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param4, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-4).", 1,0);}
-
-   Succes = ReadFile( PortSerie, &Retour, 2, &NbEcrits, 0 );
-   if( ! Succes )
-   { Erreur(" Erreur dans la reception d'un parametre (Read-1).", 1,0);}
-
-   if ( HighByte == 1)
-   {
-      int Valeur1 = 0;
-	  int Valeur2 = 0;
-
-	  Valeur1 = Retour & 0xFF00;
-	  Valeur2 = Retour & 0x00FF;
-
-	  Valeur1 = Valeur1 >> 8;
-	  Valeur2 = Valeur2 << 8;
-
-	  Retour = Valeur1 | Valeur2;
-   }
-
-   return Retour;
-}
-int IRobot::Read(unsigned char Param1, unsigned char Param2, unsigned char Param3, unsigned char Param4, unsigned char Param5,bool HighByte)
-{
-   DWORD NbEcrits = 0;
-   bool Succes = 0;
-   int Retour = 0;
-
-   Succes = WriteFile(PortSerie, &Param1, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-5).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param2, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-5).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param3, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-5).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param4, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-5).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param5, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-5).", 1,0);}
-
-   Succes = ReadFile( PortSerie, &Retour, 2, &NbEcrits, 0 );
-   if( ! Succes )
-   { Erreur(" Erreur dans la reception d'un parametre (Read-1).", 1,0);}
-
-   //if ( HighByte == 1)
-   //{
-   //   Retour = Retour >> 4;
-   //}
-
-   return Retour;
-}
-int IRobot::Read(unsigned char Param1, unsigned char Param2, unsigned char Param3, unsigned char Param4, unsigned char Param5, unsigned char Param6,bool HighByte)
-{
-   DWORD NbEcrits = 0;
-   bool Succes = 0;
-   int Retour = 0;
-
-   Succes = WriteFile(PortSerie, &Param1, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-6).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param2, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-6).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param3, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-6).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param4, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-6).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param5, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-6).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param6, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-6).", 1,0);}
-
-   Succes = ReadFile( PortSerie, &Retour, 2, &NbEcrits, 0 );
-   if( ! Succes )
-   { Erreur(" Erreur dans la reception d'un parametre (Read-1).", 1,0);}
-
-   //if ( HighByte == 1)
-   //{
-   //   Retour = Retour >> 4;
-   //}
-
-   return Retour;
-}
-int IRobot::Read(unsigned char Param1, unsigned char Param2, unsigned char Param3, unsigned char Param4, unsigned char Param5, unsigned char Param6, unsigned char Param7,bool HighByte)
-{
-   DWORD NbEcrits = 0;
-   bool Succes = 0;
-   int Retour = 0;
-
-
-   Succes = WriteFile(PortSerie, &Param1, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-7).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param2, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-7).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param3, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-7).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param4, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-7).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param5, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-7).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param6, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-7).", 1,0);}
-
-   Succes = WriteFile(PortSerie, &Param7, 1, &NbEcrits, 0);
-   if( ! Succes )
-   { Erreur(" Erreur dans l'envoi d'un parametre (Read-7).", 1,0);}
-
-   Succes = ReadFile( PortSerie, &Retour, 2, &NbEcrits, 0 );
-   if( ! Succes )
-   { Erreur(" Erreur dans la reception d'un parametre (Read-1).", 1,0);}
-
-
-   //if ( HighByte == 1)
-   //{
-   //   Retour = Retour >> 4;
-   //}
-
-   return Retour;
-}
-
-
 
 //////////////////////////////////////           ERREUR            ////////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -921,13 +703,9 @@ char IRobot::ShortToChar(short Valeur, int PositionQuartet)
 //////////////////////////////////    CONSTRUCTEUR --- DESTRUCTEUR     ////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 IRobot::IRobot()
+	: m_Temps_Lecture{100}, m_Temps_Ecriture{100}
 {
    SetConnection();				// Met a jour le HANDLE "PortSerie", set les paramètres de communication.
-
-   // Mise à jour des temps d'écriture et temps de lecture maximal.
-   m_Temps_Ecriture = 100;
-   m_Temps_Lecture = 100;
-   
 
    Flush(1000); // Vide le port série des messages reçus à l'initialisation.
 
