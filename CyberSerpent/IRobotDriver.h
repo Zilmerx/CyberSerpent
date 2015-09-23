@@ -88,14 +88,14 @@ namespace IRobot
 	   // Fonctions qui retournent la valeur des sensors.
 	   // Fonction qui permet de lire les valeurs de retour des sensors. 
 	   int Sensor(CodeSensor sensor);
-	   int IRobot::Sensor(CodeSensor sensor, DirectionX precision);
+	   int Sensor(CodeSensor sensor, DirectionX precision);
 
 	   // Fonction qui fait 5 verification de la valeur des sensors et retourne la moyenne.
 	   int S_Sensor(CodeSensor sensor);
 	   int S_Sensor(CodeSensor sensor, DirectionX precision);
 
 	   // Fonction qui fait jouer une musique.
-	   void IRobot::Music(int Numero);
+	   void Music(int Numero);
 
 
 	   // Constructeur --- Destructeur.
@@ -145,7 +145,6 @@ namespace IRobot
 
 	   // Transformation d'un short en un char, en choisissant si on veut le quartet HAUT ou BAS.
 	   char ShortToChar(short Valeur, int PositionQuartet);
-
 	};
 
 }
