@@ -2,14 +2,10 @@
 
 #include <vector>
 #include "Point2D.h"
-#include "CyberSerpent.h"
 
-class CyberSerpent;
 
 class Gameplay
 {
-   std::shared_ptr<CyberSerpent> m_Game;
-
    std::vector<Point2D> m_Obstacles;
 
 public:
@@ -24,7 +20,7 @@ private:
 
 
 public:
-   Gameplay(CyberSerpent* serpent);
+   Gameplay();
    ~Gameplay();
 
 };

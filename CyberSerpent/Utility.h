@@ -21,6 +21,6 @@ public:
 
    static int MinDistance(Point2D point1, Point2D point2)
    {
-      return min(abs(abs(point1.x)-abs(point2.x)), abs(abs(point1.y)- abs(point2.y)));
+      return std::min(abs(abs(point1.x)-abs(point2.x)), abs(abs(point1.y)- abs(point2.y)));
    }
 };

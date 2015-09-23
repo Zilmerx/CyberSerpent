@@ -2,7 +2,7 @@
 #include "CyberSerpent.h"
 
 CyberSerpent::CyberSerpent()
-	: m_Gameplay{ std::make_shared<Gameplay>(this) }, m_KeyboardReader{ std::make_shared<KeyboardReader>(this) }
+	: m_Gameplay{}, m_IRobotDriver{}, m_KeyboardReader{}, m_VideoAnalyzer{ this }
 {
 
 }

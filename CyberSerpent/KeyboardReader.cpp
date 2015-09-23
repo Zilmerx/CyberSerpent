@@ -4,12 +4,6 @@
 // PUBLIC
 
 #pragma region Constructeur / Destructeur
-KeyboardReader::KeyboardReader(CyberSerpent* serpent)
-	: KeyboardReader()
-{
-	m_Game = std::make_shared<CyberSerpent>(serpent);
-}
-
 KeyboardReader::KeyboardReader()
 	: m_RunThread{ false },
 	m_ThreadIsRunning{ false },
