@@ -4,8 +4,17 @@
 // PUBLIC
 
 #pragma region Constructeur / Destructeur
+KeyboardReader::KeyboardReader(CyberSerpent* serpent)
+	: KeyboardReader()
+{
+	m_Game = std::make_shared<CyberSerpent>(serpent);
+}
+
 KeyboardReader::KeyboardReader()
-: m_RunThread{ false }, m_ThreadIsRunning{ false }, m_Thread{}, m_CallbackList((KeyboardReader::MAXKEYVALUE - KeyboardReader::MINKEYVALUE))
+	: m_RunThread{ false },
+	m_ThreadIsRunning{ false },
+	m_Thread{},
+	m_CallbackList((KeyboardReader::MAXKEYVALUE - KeyboardReader::MINKEYVALUE))
 {
 }
 
@@ -107,14 +116,4 @@ void KeyboardReader::executeKeyValue(int keyValue) const
    {
       m_CallbackList[keyValue - MINKEYVALUE]();
    }
-}
-
-
-// SINGLETON
-
-KeyboardReader KeyboardReader::m_instance = KeyboardReader();
-
-KeyboardReader& KeyboardReader::Instance()
-{
-   return m_instance;
 }

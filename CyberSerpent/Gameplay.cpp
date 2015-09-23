@@ -5,7 +5,8 @@
 // PUBLIC
 
 #pragma region Constructeur / Destructeur
-Gameplay::Gameplay()
+Gameplay::Gameplay(CyberSerpent* serpent)
+	: m_Game{serpent}
 {
 }
 

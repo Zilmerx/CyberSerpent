@@ -1,3 +1,4 @@
+#pragma once
 
 // PRIS DE CETTE SOURCE.
 // https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Non-copyable_Mixin

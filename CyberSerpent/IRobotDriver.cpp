@@ -95,7 +95,7 @@ void IRobot::Gauche ( short Vitesse, char TournurePourcentage )
 // Tourner sur place jusqu'à un angle.
 void IRobot::ADroite ( short Vitesse, char Angle)
 {
-   cout << "Herp";
+   std::cout << "Herp";
    if (Vitesse >= 0 && Vitesse <= 500 && Angle <= 180 && Angle >= 0)
    {
       Sensor(ANGLE); // Reset de la valeur Angle à 0..
@@ -107,7 +107,7 @@ void IRobot::ADroite ( short Vitesse, char Angle)
       while (ValeurAngle >= -Angle)
       {
          HDroite(Vitesse);
-         cout << ValeurAngle << Angle;
+		 std::cout << ValeurAngle << Angle;
          ValeurAngle += Sensor(ANGLE);
       }
       Stop();
@@ -115,7 +115,7 @@ void IRobot::ADroite ( short Vitesse, char Angle)
 }
 void IRobot::AGauche ( short Vitesse, char Angle)
 {
-   cout << "Derp";
+std::cout << "Derp";
    if (Vitesse >= 0 && Vitesse <= 500 && Angle <= 180 && Angle >= 0)
    {
       Sensor(ANGLE); // Reset de la valeur Angle à 0..
@@ -125,7 +125,7 @@ void IRobot::AGauche ( short Vitesse, char Angle)
       while (ValeurAngle <= Angle)
       {
          HGauche(Vitesse);
-         cout << ValeurAngle << Angle;
+		 std::cout << ValeurAngle << Angle;
          ValeurAngle += Sensor(ANGLE);
       }
       Stop();
@@ -169,7 +169,7 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
       int Cliff_Signal_Gauche = 0;
 
       system("cls");
-      cout << "SuivreLigne - Recherche de la ligne.." << endl;
+	  std::cout << "SuivreLigne - Recherche de la ligne.." << std::endl;
 
 	  int ValeurDroite = S_Sensor(CLIFF_SIGNAL, AVANT_DROITE);
 
@@ -178,7 +178,7 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
 		  ValeurDroite = S_Sensor(CLIFF_SIGNAL, AVANT_DROITE);
 
 		  system("cls");
-		  cout << ValeurDroite;
+		  std::cout << ValeurDroite;
 
 		  HGauche(20);
 		  Sleep(300);
@@ -196,7 +196,7 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
       Stop();
 
 	  system("cls");
-      cout << "SuivreLigne - Ligne trouvee ! Pret a suivre.." << endl;
+	  std::cout << "SuivreLigne - Ligne trouvee ! Pret a suivre.." << std::endl;
 	  Sleep(1000);
 
       //Boucle pour suivre la bande jusqu'a intersection.
@@ -277,7 +277,7 @@ int IRobot::Sensor(CodeSensor sensor)
       break;
    }
 
-   throw invalid_argument("Numero de sensor non-reconnu");
+   throw std::invalid_argument("Numero de sensor non-reconnu");
 }
 int IRobot::S_Sensor(CodeSensor sensor)
 {
@@ -506,7 +506,7 @@ void IRobot::Music(int Numero)
 void IRobot::SetConnection()
 {
    system("cls");
-   cout << "IRobot Boot - Setting des parametres de connection.." << endl;
+   std::cout << "IRobot Boot - Setting des parametres de connection.." << std::endl;
    // Mise a jour du membre "PortSerie"
 
    PortSerie = CreateFileA( "COM3", GENERIC_READ | GENERIC_WRITE, 0, 0,OPEN_EXISTING, 0, 0 );
@@ -518,7 +518,7 @@ void IRobot::SetConnection()
 void IRobot::ComSetup(HANDLE PortSerie, int BaudRate, short ByteSize, short Parity, short StopBits)
 {
    system("cls");
-   cout << "IRobot Boot - Setting des parametres de communication.." << endl;
+   std::cout << "IRobot Boot - Setting des parametres de communication.." << std::endl;
    DCB Dcb;
 
    if( ! GetCommState( PortSerie, &Dcb ) )
@@ -540,7 +540,7 @@ void IRobot::ComSetup(HANDLE PortSerie, int BaudRate, short ByteSize, short Pari
 void IRobot::ComTimeoutSetup( int IT, int RTTM, int RTTC, int WTTM, int WTTC)
 {
    system("cls");
-   cout << "IRobot Boot - Setting des parametres des delais d'attente.." << endl;
+   std::cout << "IRobot Boot - Setting des parametres des delais d'attente.." << std::endl;
    COMMTIMEOUTS delais;
 
    delais.ReadIntervalTimeout         = IT;
@@ -557,19 +557,19 @@ void IRobot::ComTimeoutSetup( int IT, int RTTM, int RTTC, int WTTM, int WTTC)
 void IRobot::Bonjour()
 {
    system("cls");
-   cout << "IRobot Boot - REUSSI!";
+   std::cout << "IRobot Boot - REUSSI!";
    // Musique de salutation.
    Sleep(1000);
-   cout << ".";
+   std::cout << ".";
    Sleep(1000);
-   cout << ".";
+   std::cout << ".";
    Sleep(1000);
    system("cls");
 }
 void IRobot::SetMusique()
 {
 	system("cls");
-    cout << "IRobot Boot - Setting de la liste de musiques.." << endl;
+    std::cout << "IRobot Boot - Setting de la liste de musiques.." << std::endl;
 	// Charge.
 	Send(140,1,6,60,8,65,8);
     Send(69,8,72,16,69,8,72);
@@ -593,7 +593,7 @@ void IRobot::Flush(int Quantité)
    ComTimeoutSetup(MAXDWORD,MAXDWORD,15*Quantité,MAXDWORD,15*Quantité);
 
    system("cls");
-   cout << "IRobot Boot - Nettoyage du port.." << endl;
+   std::cout << "IRobot Boot - Nettoyage du port.." << std::endl;
 
    if( !ReadFile(PortSerie, Tampon, strlen(Tampon), &NbEcrits, 0) )
    { Erreur(" Erreur dans la reception d'un parametre (Flush).", 1,0);}
@@ -668,7 +668,7 @@ int IRobot::Read(bool HighByte, char arg1, ...)
 // Permet d'envoyer un message d'erreur à l'utilisateur ainsi qu'un numero.
 int IRobot::Erreur( char* message, DWORD erreur, bool Shutdown )
 {
-   cout << "Erreur no " << erreur << " : " << message << endl;
+   std::cout << "Erreur no " << erreur << " : " << message << std::endl;
    system("pause");
    if (Shutdown == 1)
    {

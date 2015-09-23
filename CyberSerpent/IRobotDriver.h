@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  TODO LIST :
 
@@ -7,8 +9,6 @@
 
 #include <iostream>
 #include <windows.h>
-
-using namespace std;
 
 namespace IRobot
 {

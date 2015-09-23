@@ -32,7 +32,7 @@ void FonctionDERP()
 
 int MainTestKeyBoard()
 {
-	KeyboardReader &reader = KeyboardReader::Instance();
+	KeyboardReader reader;
 
 	reader.setFunction(75, FonctionHERP);
 	reader.setFunction(75, FonctionDERP);

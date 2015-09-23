@@ -1,8 +1,12 @@
+#pragma once
+
 #include <functional>
 #include <vector>
 #include <thread>
 #include <memory>
 #include <atomic>
+
+#include "CyberSerpent.h"
 
 /*
 KeyboardReader.
@@ -13,8 +17,13 @@ Permet d'executer une, ou une serie de fonction au moment de l'activation d'une 
 // Valeurs de retour pour le clavier a utiliser pour la fonction addFunction(..).
 // https://msdn.microsoft.com/en-us/library/aa299374(VS.60).aspx
 
+class CyberSerpent;
+
 class KeyboardReader
 {
+	std::shared_ptr<CyberSerpent> m_Game;
+
+
    // Tableau de tableau de fonctions. KeyPressCallbackList[0] retourne la fonction devant s'executer lorsque quelqu'un pese sur le caractere #1 du clavier.
    std::vector<std::function<void(void)>> m_CallbackList;
 
@@ -38,6 +47,10 @@ public:
    void setFunction(int keyValue, std::function<void(void)> func);
    void clearFunction(int keyValue);
 
+   KeyboardReader(CyberSerpent* serpent);
+   KeyboardReader();
+   ~KeyboardReader();
+
 private:
 
    static void validateKeyValue(int& keyValue);
@@ -48,19 +61,5 @@ private:
 
    void executeKeyValue(int keyValue) const;
 
-
-   #pragma region Singleton / Ctor / Copie / Dtor
-private:
-   KeyboardReader& operator= (const KeyboardReader&){}
-   KeyboardReader(const KeyboardReader&){}
-
-   static KeyboardReader m_instance;
-   KeyboardReader();
-   ~KeyboardReader();
-
-public:
-
-   static KeyboardReader& Instance();
-   #pragma endregion
 
 };
