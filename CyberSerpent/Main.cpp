@@ -9,7 +9,6 @@ Le 15 Septembre 2015.
 
 #include "CyberSerpent.h"
 
-
 int main()
 {
 	//MainTestKeyBoard();
