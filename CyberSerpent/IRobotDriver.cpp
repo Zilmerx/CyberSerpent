@@ -1,6 +1,7 @@
 #include "IRobotDriver.h"
 #include <stdarg.h>
 #include <exception>
+#include <string>
 
 namespace IRobot
 {
@@ -16,7 +17,7 @@ namespace IRobot
 /////////////////////////////////////            DRIVE               //////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 // Fonctions dérivées de Drive, pour conduire le robot.
-void IRobot::Avant( short Vitesse )
+void IRobot::Avant( short Vitesse ) const
 {
    if (Vitesse <= 500 && Vitesse >= 0)
    {
@@ -24,10 +25,10 @@ void IRobot::Avant( short Vitesse )
    }
    else
    {
-      Erreur("Une valeur de vitesse n'est pas correcte. (Avant)", 2,0);
+      Erreur(std::cout, "Une valeur de vitesse n'est pas correcte. (Avant)", false);
    }
 }
-void IRobot::Arriere( short Vitesse )
+void IRobot::Arriere( short Vitesse ) const
 {
    if (Vitesse <= 500 && Vitesse >= 0)
    {
@@ -35,15 +36,15 @@ void IRobot::Arriere( short Vitesse )
    }
    else
    {
-      Erreur("Une valeur de vitesse n'est pas correcte. (Arriere)", 2,0);
+      Erreur(std::cout, "Une valeur de vitesse n'est pas correcte. (Arriere)", false);
    }
 }
-void IRobot::Stop()
+void IRobot::Stop() const
 {
    Drive(0,0);
 }
 // Tourner sur place.
-void IRobot::HDroite ( short Vitesse )
+void IRobot::HDroite ( short Vitesse ) const
 {
    if (Vitesse <= 500 && Vitesse >= 0)
    {
@@ -51,10 +52,10 @@ void IRobot::HDroite ( short Vitesse )
    }
    else
    {
-      Erreur("Une valeur de vitesse n'est pas correcte. (HDroite)", 2,0);
+      Erreur(std::cout, "Une valeur de vitesse n'est pas correcte. (HDroite)", false);
    }
 }
-void IRobot::HGauche ( short Vitesse )
+void IRobot::HGauche ( short Vitesse ) const
 {
    if (Vitesse <= 500 && Vitesse >= 0)
    {
@@ -62,11 +63,11 @@ void IRobot::HGauche ( short Vitesse )
    }
    else
    {
-      Erreur("Une valeur de vitesse n'est pas correcte. (HGauche)", 2,0);
+      Erreur(std::cout, "Une valeur de vitesse n'est pas correcte. (HGauche)", false);
    }
 }
 // Tourner avec un pourcentage de vitesse sur une roue.
-void IRobot::Droite ( short Vitesse, char TournurePourcentage )
+void IRobot::Droite ( short Vitesse, char TournurePourcentage ) const
 {
    if (Vitesse <= 500 && Vitesse >= -500 && TournurePourcentage <= 100 && TournurePourcentage >= 0)
    {
@@ -76,10 +77,10 @@ void IRobot::Droite ( short Vitesse, char TournurePourcentage )
    }
    else
    {
-      Erreur("Une valeur de vitesse n'est pas correcte, ou le % de tournure n'est pas entre 0 ou 100. (Droite)", 2,0);
+      Erreur(std::cout, "Une valeur de vitesse n'est pas correcte, ou le % de tournure n'est pas entre 0 ou 100. (Droite)", false);
    }
 }
-void IRobot::Gauche ( short Vitesse, char TournurePourcentage )
+void IRobot::Gauche ( short Vitesse, char TournurePourcentage ) const
 {
    if (Vitesse <= 500 && Vitesse >= -500 && TournurePourcentage <= 100 && TournurePourcentage >= 0)
    {
@@ -89,11 +90,11 @@ void IRobot::Gauche ( short Vitesse, char TournurePourcentage )
    }
    else
    {
-      Erreur("Une valeur de vitesse n'est pas correcte, ou le % de tournure n'est pas entre 0 ou 100. (Gauche)", 2,0);
+      Erreur(std::cout, "Une valeur de vitesse n'est pas correcte, ou le % de tournure n'est pas entre 0 ou 100. (Gauche)", false);
    }
 }
 // Tourner sur place jusqu'à un angle.
-void IRobot::ADroite ( short Vitesse, char Angle)
+void IRobot::ADroite ( short Vitesse, char Angle) const
 {
    std::cout << "Herp";
    if (Vitesse >= 0 && Vitesse <= 500 && Angle <= 180 && Angle >= 0)
@@ -101,8 +102,6 @@ void IRobot::ADroite ( short Vitesse, char Angle)
       Sensor(ANGLE); // Reset de la valeur Angle à 0..
 
       int ValeurAngle = 0;
-
-      system("pause");
 
       while (ValeurAngle >= -Angle)
       {
@@ -113,9 +112,9 @@ void IRobot::ADroite ( short Vitesse, char Angle)
       Stop();
    }
 }
-void IRobot::AGauche ( short Vitesse, char Angle)
+void IRobot::AGauche ( short Vitesse, char Angle) const
 {
-std::cout << "Derp";
+	std::cout << "Derp";
    if (Vitesse >= 0 && Vitesse <= 500 && Angle <= 180 && Angle >= 0)
    {
       Sensor(ANGLE); // Reset de la valeur Angle à 0..
@@ -134,11 +133,11 @@ std::cout << "Derp";
 
 
 // Drive permet de conduire le robot.
-void IRobot::Drive( short VitesseGauche, short VitesseDroite)
+void IRobot::Drive( short VitesseGauche, short VitesseDroite) const
 {
    if (VitesseGauche < -500 || VitesseGauche > 500 || VitesseDroite < -500 || VitesseDroite > 500)
    {
-      Erreur("Une valeur de vitesse n'est pas correcte. (Drive)", 2,0);
+      Erreur(std::cout, "Une valeur de vitesse n'est pas correcte. (Drive)", false);
    }
    else
    {
@@ -158,7 +157,7 @@ void IRobot::Drive( short VitesseGauche, short VitesseDroite)
 /////////////////////////////////////         SUIVRE LIGNE           //////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 // Permet de suivre une ligne noire sur le sol.
-char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_Bande)
+char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_Bande) const
 {
    int Limite_Luminosite = (Luminosite_Plancher + Luminosite_Bande) / 2;
 
@@ -168,7 +167,6 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
       int Cliff_Signal_Droit = 0;
       int Cliff_Signal_Gauche = 0;
 
-      system("cls");
 	  std::cout << "SuivreLigne - Recherche de la ligne.." << std::endl;
 
 	  int ValeurDroite = S_Sensor(CLIFF_SIGNAL, AVANT_DROITE);
@@ -176,9 +174,6 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
       while(ValeurDroite >= Limite_Luminosite )	// INVERSER >= pour <= APRÈS LES TESTS.
       {
 		  ValeurDroite = S_Sensor(CLIFF_SIGNAL, AVANT_DROITE);
-
-		  system("cls");
-		  std::cout << ValeurDroite;
 
 		  HGauche(20);
 		  Sleep(300);
@@ -195,8 +190,6 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
       }
       Stop();
 
-	  system("cls");
-	  std::cout << "SuivreLigne - Ligne trouvee ! Pret a suivre.." << std::endl;
 	  Sleep(1000);
 
       //Boucle pour suivre la bande jusqu'a intersection.
@@ -241,7 +234,7 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
    }
    else
    {
-      Erreur("La vitesse entrée en parametre n'est pas valide. (SuivreLigne.)", 1,0);
+      Erreur(std::cout, "La vitesse entrée en parametre n'est pas valide. (SuivreLigne.)", false);
       return 1;
    }
 
@@ -251,7 +244,7 @@ char IRobot::SuivreLigne( int Vitesse, int Luminosite_Plancher, int Luminosite_B
 /////////////////////////////////////            SENSOR              //////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-int IRobot::Sensor(CodeSensor sensor)
+int IRobot::Sensor(CodeSensor sensor) const
 {
    switch (sensor){
    case CodeSensor::WALL :
@@ -279,7 +272,7 @@ int IRobot::Sensor(CodeSensor sensor)
 
    throw std::invalid_argument("Numero de sensor non-reconnu");
 }
-int IRobot::S_Sensor(CodeSensor sensor)
+int IRobot::S_Sensor(CodeSensor sensor) const
 {
    int Retour[3];
    int VRetour = 0;
@@ -314,7 +307,7 @@ int IRobot::S_Sensor(CodeSensor sensor)
    return Retour[2];
 
 }
-int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
+int IRobot::Sensor(CodeSensor sensor, DirectionX precision) const
 {
    int Retour = -1;
 
@@ -333,7 +326,7 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
       }
       else
       {
-         Erreur("La précision pour le sensor BUMPER n'est pas valide. ( Sensor )", 1,0);
+         Erreur(std::cout, "La précision pour le sensor BUMPER n'est pas valide. ( Sensor )", false);
       }}
       break;
 
@@ -351,7 +344,7 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
       }
       else
       {
-         Erreur("La précision pour le sensor WHEEL n'est pas valide. ( Sensor )", 1,0);
+         Erreur(std::cout, "La précision pour le sensor WHEEL n'est pas valide. ( Sensor )", false);
       }}
       break;
 
@@ -380,7 +373,7 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
       }
       else
       {
-         Erreur("La précision pour le sensor CLIFF n'est pas valide. ( Sensor )", 1,0);
+         Erreur(std::cout, "La précision pour le sensor CLIFF n'est pas valide. ( Sensor )", false);
       }}}}
       break;
 
@@ -417,7 +410,7 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
       }
       else
       {
-         Erreur("La précision pour le sensor CLIFF_SIGNAL n'est pas valide. ( Sensor )", 1,0);
+         Erreur(std::cout, "La précision pour le sensor CLIFF_SIGNAL n'est pas valide. ( Sensor )", false);
       }}}}
       break;
 
@@ -451,7 +444,7 @@ int IRobot::Sensor(CodeSensor sensor, DirectionX precision)
    }
    return Retour;
 }
-int IRobot::S_Sensor(CodeSensor sensor, DirectionX precision)
+int IRobot::S_Sensor(CodeSensor sensor, DirectionX precision) const
 {
    int Retour[3];
    int Moy_Retour = 0;
@@ -483,7 +476,7 @@ int IRobot::S_Sensor(CodeSensor sensor, DirectionX precision)
 
 /////////////////////////////////////            MUSIQUE             //////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-void IRobot::Music(int Numero)
+void IRobot::Music(int Numero) const
 {
 	Send(132,141,Numero);
 	Sleep(2000);
@@ -505,25 +498,21 @@ void IRobot::Music(int Numero)
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 void IRobot::SetConnection()
 {
-   system("cls");
-   std::cout << "IRobot Boot - Setting des parametres de connection.." << std::endl;
    // Mise a jour du membre "PortSerie"
 
    PortSerie = CreateFileA( "COM3", GENERIC_READ | GENERIC_WRITE, 0, 0,OPEN_EXISTING, 0, 0 );
    if( PortSerie == INVALID_HANDLE_VALUE )
-   {Erreur( "Erreur dans la tentative de connection ( Robot ferme ? ).", GetLastError() ,1);}
+   {Erreur(std::cout, "Erreur dans la tentative de connection ( Robot ferme ? ). Error #" + std::to_string(GetLastError()) ,true);}
 
    ComSetup(PortSerie, 57600, 8, NOPARITY, ONESTOPBIT);
 }
-void IRobot::ComSetup(HANDLE PortSerie, int BaudRate, short ByteSize, short Parity, short StopBits)
+void IRobot::ComSetup(HANDLE PortSerie, int BaudRate, short ByteSize, short Parity, short StopBits) const
 {
-   system("cls");
-   std::cout << "IRobot Boot - Setting des parametres de communication.." << std::endl;
    DCB Dcb;
 
    if( ! GetCommState( PortSerie, &Dcb ) )
    {
-      Erreur( "ComSetup - GetCommState", GetLastError() ,0);
+      Erreur(std::cout, "ComSetup - GetCommState. Error #" + std::to_string(GetLastError()) , true);
    }
    
    // Modification des valeurs.
@@ -534,13 +523,11 @@ void IRobot::ComSetup(HANDLE PortSerie, int BaudRate, short ByteSize, short Pari
    
    if( ! SetCommState( PortSerie, &Dcb ) )
    {
-      Erreur( "ComSetup - SetCommState", GetLastError() ,0);
+	   Erreur(std::cout, "ComSetup - SetCommState. Error #"+ std::to_string(GetLastError()) , true);
    }
 }
-void IRobot::ComTimeoutSetup( int IT, int RTTM, int RTTC, int WTTM, int WTTC)
+void IRobot::ComTimeoutSetup( int IT, int RTTM, int RTTC, int WTTM, int WTTC) const
 {
-   system("cls");
-   std::cout << "IRobot Boot - Setting des parametres des delais d'attente.." << std::endl;
    COMMTIMEOUTS delais;
 
    delais.ReadIntervalTimeout         = IT;
@@ -551,25 +538,15 @@ void IRobot::ComTimeoutSetup( int IT, int RTTM, int RTTC, int WTTM, int WTTC)
 
    if( !SetCommTimeouts( PortSerie, &delais ) )
    {
-      Erreur("Erreur dans le setting du timeout de la communication.",0,0);
+      Erreur(std::cout, "Erreur dans le setting du timeout de la communication.", true);
    }
 }
-void IRobot::Bonjour()
+void IRobot::Bonjour() const
 {
-   system("cls");
-   std::cout << "IRobot Boot - REUSSI!";
    // Musique de salutation.
-   Sleep(1000);
-   std::cout << ".";
-   Sleep(1000);
-   std::cout << ".";
-   Sleep(1000);
-   system("cls");
 }
-void IRobot::SetMusique()
+void IRobot::SetMusique() const
 {
-	system("cls");
-    std::cout << "IRobot Boot - Setting de la liste de musiques.." << std::endl;
 	// Charge.
 	Send(140,1,6,60,8,65,8);
     Send(69,8,72,16,69,8,72);
@@ -582,21 +559,16 @@ void IRobot::SetMusique()
 	Send(140,3,7,88,8,88,16);
 	Send(88,16,84,8,88,16,91);
 	Send(32,79,16);
-
 }
-void IRobot::Flush(int Quantité)
+void IRobot::Flush(int Quantité) const
 {
    DWORD NbEcrits = 0;
-   bool Succes = 0;
    char *Tampon = new char[Quantité];
 
    ComTimeoutSetup(MAXDWORD,MAXDWORD,15*Quantité,MAXDWORD,15*Quantité);
 
-   system("cls");
-   std::cout << "IRobot Boot - Nettoyage du port.." << std::endl;
-
    if( !ReadFile(PortSerie, Tampon, strlen(Tampon), &NbEcrits, 0) )
-   { Erreur(" Erreur dans la reception d'un parametre (Flush).", 1,0);}
+   { Erreur(std::cout, " Erreur dans la reception d'un parametre (Flush).", false);}
 
    ComTimeoutSetup(0,0,m_Temps_Lecture, 0,m_Temps_Ecriture);
 
@@ -608,7 +580,7 @@ void IRobot::Flush(int Quantité)
 ///////////////////////////////////////           SEND            /////////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 // Permet d'envoyer un ou plusieurs chars au robot.
-void IRobot::Send(char arg1, ...)
+void IRobot::Send(char arg1, ...) const
 {
 	DWORD NbEcrits = 0;
 
@@ -616,12 +588,18 @@ void IRobot::Send(char arg1, ...)
 
 	va_start(ap, arg1);
 
-	for (char i = arg1; ; i = va_arg(ap, char))
+	try
 	{
-		if (!WriteFile(PortSerie, &i, 1, &NbEcrits, 0))
+		for (char i = arg1; ; i = va_arg(ap, char))
 		{
-			Erreur(" Erreur dans l'envoi d'un parametre.", 1, 0);
+			if (!WriteFile(PortSerie, &i, 1, &NbEcrits, 0))
+			{
+				Erreur(std::cout, " Erreur dans l'envoi d'un parametre.", true);
+			}
 		}
+	}
+	catch (std::runtime_error)
+	{
 	}
 
 	va_end(ap);
@@ -630,7 +608,7 @@ void IRobot::Send(char arg1, ...)
 ///////////////////////////////////////           READ            /////////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 // Permet d'envoyer une ou plusieurs valeurs au robot et de recevoir le message de retour.
-int IRobot::Read(bool HighByte, char arg1, ...)
+int IRobot::Read(bool HighByte, char arg1, ...) const
 {
    int Retour = 0;
    DWORD NbEcrits = 0;
@@ -639,20 +617,32 @@ int IRobot::Read(bool HighByte, char arg1, ...)
 
    va_start(ap, arg1);
 
-   for (char i = arg1; ; i = va_arg(ap, char))
-   {
-	   if (!WriteFile(PortSerie, &i, 1, &NbEcrits, 0))
+	try
+	{
+	   for (char i = arg1; ; i = va_arg(ap, char))
 	   {
-		   Erreur(" Erreur dans l'envoi d'un parametre.", 1, 0);
+		   if (!WriteFile(PortSerie, &i, 1, &NbEcrits, 0))
+		   {
+			   Erreur(std::cout, " Erreur dans l'envoi d'un parametre.", false);
+		   }
 	   }
-   }
+	}
+	catch (std::runtime_error)
+	{
+	}
 
-   va_end(ap);
+	va_end(ap);
 
-   if (!ReadFile(PortSerie, &Retour, 1, &NbEcrits, 0))
-   {
-	   Erreur(" Erreur dans la reception d'un parametre (Read-1).", 1, 0);
-   }
+	try
+	{
+		if (!ReadFile(PortSerie, &Retour, 1, &NbEcrits, 0))
+		{
+			Erreur(std::cout, " Erreur dans la reception d'un parametre (Read-1).", false);
+		}
+	}
+	catch (std::runtime_error)
+	{
+	}
 
    if (HighByte)
    {
@@ -666,15 +656,16 @@ int IRobot::Read(bool HighByte, char arg1, ...)
 //////////////////////////////////////           ERREUR            ////////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 // Permet d'envoyer un message d'erreur à l'utilisateur ainsi qu'un numero.
-int IRobot::Erreur( char* message, DWORD erreur, bool Shutdown )
+void IRobot::Erreur(std::ostream& stream, std::string message, bool SendException) const
 {
-   std::cout << "Erreur no " << erreur << " : " << message << std::endl;
-   system("pause");
-   if (Shutdown == 1)
+   if (SendException)
    {
-      ExitProcess(0);
+	   throw std::runtime_error("IRobot: " + message);
    }
-   return erreur;
+   else
+   {
+	   stream << message << std::endl;
+   }
 }
 
 
@@ -682,7 +673,7 @@ int IRobot::Erreur( char* message, DWORD erreur, bool Shutdown )
 //////////////////////////////////           TRANSFORMATION            ////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 // Transforme un short en un char, en spécifiant si on veut le quartet HAUT ou BAS.
-char IRobot::ShortToChar(short Valeur, int PositionQuartet)
+char IRobot::ShortToChar(short Valeur, int PositionQuartet) const
 {
    char ValeurRetour = 0;
 
@@ -700,25 +691,48 @@ char IRobot::ShortToChar(short Valeur, int PositionQuartet)
 }
 
 
+bool IRobot::Initialize()
+{
+	try
+	{
+		SetConnection();			// Met a jour le HANDLE "PortSerie", set les paramètres de communication.
+
+		Flush(1000);				// Vide le port série des messages reçus à l'initialisation.
+
+		SetMusique();				// Met des musiques dans le robot.
+
+		Stop();
+		Bonjour();					// Fait jouer une musique de salutation au début du programme - Sers à vérifier que la communication est établie.
+	}
+	catch (std::runtime_error e)
+	{
+		std::cout << e.what();
+		return false;
+	}
+	return true;
+}
+void IRobot::Deconnecter() const
+{
+	try
+	{
+		CloseHandle(PortSerie);
+	}
+	catch (...)
+	{
+	}
+}
+
 //////////////////////////////////    CONSTRUCTEUR --- DESTRUCTEUR     ////////////////////////////////////////
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 IRobot::IRobot()
-	: m_Temps_Lecture{100}, m_Temps_Ecriture{100}
+	: m_Temps_Lecture{ 100 }, m_Temps_Ecriture{ 100 }, PortSerie{ nullptr }
 {
-   SetConnection();				// Met a jour le HANDLE "PortSerie", set les paramètres de communication.
-
-   Flush(1000); // Vide le port série des messages reçus à l'initialisation.
-
-   SetMusique();				// Met des musiques dans le robot.
-
-   Stop();
-   Bonjour();					// Fait jouer une musique de salutation au début du programme - Sers à vérifier que la communication est établie.
-
 }
 
 IRobot::~IRobot()
 {
-   IRobot::Stop();
-   CloseHandle(PortSerie);
+	Stop();
+	Deconnecter();
 }
+
 }

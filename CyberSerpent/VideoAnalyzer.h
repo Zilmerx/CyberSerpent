@@ -6,10 +6,11 @@ class CyberSerpent;
 
 class VideoAnalyzer
 {
-	std::shared_ptr<CyberSerpent> m_Game;
-
+	CyberSerpent* m_Game;
 
 public:
-	VideoAnalyzer(CyberSerpent* parent);
+	VideoAnalyzer();
 	~VideoAnalyzer();
+
+	void Initialize(CyberSerpent* linked);
 };

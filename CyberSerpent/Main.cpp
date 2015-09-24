@@ -14,10 +14,16 @@ int main()
 {
 	//MainTestKeyBoard();
 
+	CyberSerpent jeu{};
 
+	jeu.Initialize();
+
+	jeu.Start();
+
+	std::this_thread::sleep_for(std::chrono::seconds(5));
 }
 
-
+#pragma region MainTestKeyBoard
 ///////////////////////////////////////////
 
 void FonctionHERP()
@@ -58,3 +64,4 @@ int MainTestKeyBoard()
 
 	return 0;
 }
+#pragma endregion

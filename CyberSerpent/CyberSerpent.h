@@ -14,11 +14,19 @@ class CyberSerpent
 	KeyboardReader m_KeyboardReader;
 	VideoAnalyzer m_VideoAnalyzer;
 
+	bool m_Initialized;
 public:
 
 	CyberSerpent();
 	~CyberSerpent();
 
+	bool Initialize();
+
+	void Start();
+
 private:
+
+	void TournerRobotGauche();
+	void TournerRobotDroite();
 
 };
